@@ -8,7 +8,7 @@ const inputModel = ref(null)
 const selectOptions = ref(null)
 const modelValueUpdated = (e) => {
   emit('clearValidationErrors')
-  emit('update:modelValue',inputModel)
+  emit('update:modelValue',inputModel.value)
 }
 onMounted(()=>{
   props.modelValue && (inputModel.value = props.modelValue)
