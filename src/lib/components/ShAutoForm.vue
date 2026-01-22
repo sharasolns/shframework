@@ -217,6 +217,7 @@ const validationErrors = ref({})
 const formError = ref(null)
 const submitBtnWidth = ref(null)
 const isDirty = ref(false)
+const isSynchronizing = ref(false)
 
 // Helper functions
 const closeModal = () => {
@@ -260,11 +261,19 @@ const getFormData = () => {
   return data
 }
 
-const fieldChanged = field => {
+const fieldChanged = (field, value) => {
+  if (isSynchronizing.value) return
   isDirty.value = true
   delete validationErrors.value[field]
+  
+  // Find the field and update its value if it was passed
+  const fieldObj = formFields.value.find(f => f.field === field)
+  if (fieldObj && value !== undefined) {
+    fieldObj.value = value
+  }
+  
   const data = getFormData()
-  const fieldValue = formFields.value.find(f => f.field === field)?.value
+  const fieldValue = fieldObj?.value
   setTimeout(() => {
     emit('fieldChanged', field, fieldValue, data)
   }, 300)
@@ -395,8 +404,13 @@ const handleFailedRequest = reason => {
   emit('formError', reason)
 }
 const setExistingData = (existingData) => {
-  if (!existingData || isDirty.value) return
-
+  // Don't sync if no data provided
+  if (!existingData) return
+  
+  // Don't sync if user has made changes to the form
+  if (isDirty.value) return
+  
+  isSynchronizing.value = true
   const keys = Object.keys(existingData)
 
   keys.forEach(k => {
@@ -405,11 +419,19 @@ const setExistingData = (existingData) => {
       field.value = existingData[k]
     }
   })
+  
+  setTimeout(() => {
+    isSynchronizing.value = false
+  }, 100)
 }
 
-watch(() => props.currentData, (newData) => {
-  setExistingData(newData)
-})
+watch(() => props.currentData, (newData, oldData) => {
+  // Only sync if form is pristine (not dirty) OR if this is a completely new object reference
+  // This prevents reactive updates to currentData from overwriting user input
+  if (!isDirty.value || !oldData) {
+    setExistingData(newData)
+  }
+}, { deep: true })
 
 const currentStep = ref(0)
 const formSteps = ref([])
@@ -457,7 +479,11 @@ onMounted(() => {
     type: 'hidden'
   })
 
+  isSynchronizing.value = true
   setExistingData(props.currentData)
+  setTimeout(() => {
+    isSynchronizing.value = false
+  }, 200)
 
   // Initialize steps
   if (!props.steps || props.steps.length === 0) {
@@ -532,7 +558,7 @@ onMounted(() => {
               <span v-if="field.required" class="text-danger sh-required">*</span>
             </label>
             <component v-bind="getComponentProps(field)" :isInvalid="typeof validationErrors[field.field] !== 'undefined'"
-                       @click="fieldChanged(field.field)" @update:modelValue="fieldChanged(field.field)"
+                       @update:modelValue="val => fieldChanged(field.field, val)"
                        v-model="field.value" :class="getComponentClass(field.field)"
                        :is="getFieldComponent(field)"/>
             <label v-if="isFloating && field.label" :class="getElementClass('formLabel')" v-html="field.label"></label>
