@@ -51,7 +51,7 @@ const allowSummary = row=>{
                 </template>
               </sh-table>
               {{ selected}}
-                <sh-table  :has-range="false" :end-point="`notes/list`" :headers="['id',{
+                <sh-table  :has-range="false" :end-point="`notes/list`" :headers="['id','user.name',{
                   label:'Summary',
                   key:'title',
                   callback:formatTitle,
@@ -83,7 +83,11 @@ const allowSummary = row=>{
                       }
                   ]
                 }"
-                />
+                >
+            <template #note="{ row }">
+              <p v-html="row.note"></p>
+            </template>
+              </sh-table>
             </div>
         </div>
     </div>

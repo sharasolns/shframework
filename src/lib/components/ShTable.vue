@@ -109,6 +109,39 @@ onBeforeUnmount(() => {
 })
 
 // --- Utils used in template
+const getData = (record, key) => {
+  if (!key || !record) return ''
+  if (typeof key !== 'string') return ''
+  return key.split('.').reduce((obj, i) => (obj ? obj[i] : ''), record)
+}
+
+const getLabel = (title) => {
+  if (typeof title === 'string') {
+    if (title.includes('.')) {
+      const parts = title.split('.')
+      return parts[parts.length - 1].replace(/_/g, ' ')
+    }
+    return title.replace(/_/g, ' ')
+  }
+  if (typeof title === 'object') {
+    if (title.label) return title.label
+    const key = title.key ?? title.field ?? ''
+    if (key.includes('.')) {
+      const parts = key.split('.')
+      return parts[parts.length - 1].replace(/_/g, ' ')
+    }
+    return key.replace(/_/g, ' ')
+  }
+  return ''
+}
+
+const getSlotName = (key) => {
+  if (typeof key === 'string') return key
+  if (typeof key === 'object') return key.key ?? key.field ?? ''
+  if (typeof key === 'function') return key(null)
+  return ''
+}
+
 const cleanColumn = (col) => {
   const newCol = {...col}
   delete newCol.component
@@ -185,9 +218,13 @@ const getFieldType = (field) => {
   const numbers = ['age', 'interest_rate_pa']
   const moneys = ['amount', 'paid_amount', 'total_paid', 'total', 'monthly_fee', 'share_cost', 'min_contribution', 'min_membership_contribution']
   const dates = ['invoice_date', 'free_tier_days', 'updated_at', 'created_at', 'end_time']
-  if (typeof field === 'string' && numbers.includes(field)) return 'numeric'
-  if (typeof field === 'string' && moneys.includes(field)) return 'money'
-  if (typeof field === 'string' && dates.includes(field)) return 'date'
+
+  const rawField = typeof field === 'object' ? (field.key ?? field.field ?? '') : field
+  const lastPart = typeof rawField === 'string' && rawField.includes('.') ? rawField.split('.').pop() : rawField
+
+  if (typeof lastPart === 'string' && numbers.includes(lastPart)) return 'numeric'
+  if (typeof lastPart === 'string' && moneys.includes(lastPart)) return 'money'
+  if (typeof lastPart === 'string' && dates.includes(lastPart)) return 'date'
   return 'string'
 }
 
@@ -457,13 +494,13 @@ const stateProxy = reactive({
                 class="text-capitalize"
                 @click="changeKey('order_by', title)"
                 v-if="typeof title === 'string'"
-            >{{ title.replace(/_/g, ' ') }}</a>
+            >{{ getLabel(title) }}</a>
 
             <a
                 class="text-capitalize"
                 @click="changeKey('order_by', title.key)"
                 v-else-if="typeof title === 'object'"
-            >{{ title.label ?? title.key.replace(/_/g, ' ') }}</a>
+            >{{ getLabel(title) }}</a>
 
             <a
                 class="text-capitalize"
@@ -475,7 +512,7 @@ const stateProxy = reactive({
                 class="text-capitalize"
                 v-else-if="typeof title !== 'undefined'"
                 @click="changeKey('order_by', title)"
-            >{{ String(title).replace(/_/g, ' ') }}</a>
+            >{{ String(getLabel(title)) }}</a>
           </th>
         </template>
 
@@ -519,34 +556,36 @@ const stateProxy = reactive({
       >
         <template v-for="key in tableHeaders" :key="key">
           <td v-if="showColumn(key)">
-            <router-link
-                v-if="typeof key === 'string' && links && links[key]"
-                :target="links[key].target ? '_blank':''"
-                :to="replaceLinkUrl(links[key], record)"
-                :class="getLinkClass(links[key])"
-                v-html="record[key]"
-            />
-            <span v-else-if="getFieldType(key) === 'numeric'">
-                {{ Intl.NumberFormat().format(record[key]) }}
+            <slot :name="getSlotName(key)" :row="record" :index="index">
+              <router-link
+                  v-if="typeof key === 'string' && links && links[key]"
+                  :target="links[key].target ? '_blank':''"
+                  :to="replaceLinkUrl(links[key], record)"
+                  :class="getLinkClass(links[key])"
+                  v-html="getData(record, key)"
+              />
+              <span v-else-if="getFieldType(key) === 'numeric'">
+                {{ Intl.NumberFormat().format(getData(record, key)) }}
               </span>
-            <span v-else-if="getFieldType(key) === 'money'" class="text-success fw-bold">
-                {{ Intl.NumberFormat().format(record[key]) }}
+              <span v-else-if="getFieldType(key) === 'money'" class="text-success fw-bold">
+                {{ Intl.NumberFormat().format(getData(record, key)) }}
               </span>
-            <span v-else-if="getFieldType(key) === 'date'">
-                {{ formatDate(record[key]) }}
+              <span v-else-if="getFieldType(key) === 'date'">
+                {{ formatDate(getData(record, key)) }}
               </span>
-            <span v-else-if="typeof key === 'string'" v-html="record[key]"/>
-            <span v-else-if="typeof key === 'function'" v-html="key(record, index)"/>
-            <span v-else-if="typeof key === 'object' && key.callBack" v-html="key.callBack(record, index)"/>
-            <span v-else-if="typeof key === 'object' && key.callback" v-html="key.callback(record, index)"/>
-            <component
-                v-else-if="typeof key === 'object' && key.component"
-                :is="key.component"
-                :item="record"
-                v-bind="cleanColumn(key)"
-            />
-            <span v-else-if="typeof key === 'object'" v-html="record[key.key ?? key.field]"/>
-            <span v-else v-html="record[key[0]]"/>
+              <span v-else-if="typeof key === 'string'" v-html="getData(record, key)"/>
+              <span v-else-if="typeof key === 'function'" v-html="key(record, index)"/>
+              <span v-else-if="typeof key === 'object' && key.callBack" v-html="key.callBack(record, index)"/>
+              <span v-else-if="typeof key === 'object' && key.callback" v-html="key.callback(record, index)"/>
+              <component
+                  v-else-if="typeof key === 'object' && key.component"
+                  :is="key.component"
+                  :item="record"
+                  v-bind="cleanColumn(key)"
+              />
+              <span v-else-if="typeof key === 'object'" v-html="getData(record, key.key ?? key.field)"/>
+              <span v-else v-html="getData(record, key[0])"/>
+            </slot>
           </td>
         </template>
 
@@ -576,47 +615,49 @@ const stateProxy = reactive({
             <template v-for="key in tableHeaders" :key="key[0]">
               <template v-if="showColumn(key)">
                 <p class="mb-1 font-weight-bold text-capitalize profile-form-title" v-if="typeof key === 'string' ">
-                  {{ key.replace(/_/g, ' ') }}
+                  {{ getLabel(key) }}
                 </p>
                 <p class="mb-1 font-weight-bold text-capitalize profile-form-title"
                    v-else-if="typeof key === 'function'">
                   {{ key(null).replace(/_/g, ' ') }}
                 </p>
                 <p class="mb-1 font-weight-bold text-capitalize profile-form-title" v-else-if="typeof key === 'object'">
-                  {{ key.label ?? key.key.replace(/_/g, ' ') }}
+                  {{ getLabel(key) }}
                 </p>
                 <p class="mb-1 font-weight-bold text-capitalize profile-form-title" v-else>
                   {{ key[1].replace(/_/g, ' ') }}
                 </p>
 
                 <span>
-                  <router-link
-                      v-if="typeof key === 'string' && links && links[key]"
-                      :to="replaceLinkUrl(links[key],record)"
-                      :class="getLinkClass(links[key])"
-                      v-html="record[key]"
-                  />
-                  <span v-else-if="getFieldType(key) === 'numeric'">
-                    {{ Intl.NumberFormat().format(record[key]) }}
-                  </span>
-                  <span v-else-if="getFieldType(key) === 'money'" class="text-primary fw-bold">
-                    {{ Intl.NumberFormat().format(record[key]) }}
-                  </span>
-                  <span v-else-if="getFieldType(key) === 'date'">
-                    {{ formatDate(record[key]) }}
-                  </span>
-                  <span v-else-if="typeof key === 'string'" v-html="record[key]"/>
-                  <span v-else-if="typeof key === 'object' && key.callBack" v-html="key.callBack(record, index)"/>
-                  <span v-else-if="typeof key === 'object' && key.callback" v-html="key.callback(record, index)"/>
-                  <component
-                      v-else-if="typeof key === 'object' && key.component"
-                      :is="key.component"
-                      :item="record"
-                      v-bind="cleanColumn(key)"
-                  />
-                  <span v-else-if="typeof key === 'object'" v-html="record[key.key ?? key.field]"/>
-                  <span v-else-if="typeof key === 'function'" v-html="key(record, index)"/>
-                  <span v-else v-html="record[key[0]]"/>
+                  <slot :name="getSlotName(key)" :row="record" :index="index">
+                    <router-link
+                        v-if="typeof key === 'string' && links && links[key]"
+                        :to="replaceLinkUrl(links[key],record)"
+                        :class="getLinkClass(links[key])"
+                        v-html="getData(record, key)"
+                    />
+                    <span v-else-if="getFieldType(key) === 'numeric'">
+                      {{ Intl.NumberFormat().format(getData(record, key)) }}
+                    </span>
+                    <span v-else-if="getFieldType(key) === 'money'" class="text-primary fw-bold">
+                      {{ Intl.NumberFormat().format(getData(record, key)) }}
+                    </span>
+                    <span v-else-if="getFieldType(key) === 'date'">
+                      {{ formatDate(getData(record, key)) }}
+                    </span>
+                    <span v-else-if="typeof key === 'string'" v-html="getData(record, key)"/>
+                    <span v-else-if="typeof key === 'object' && key.callBack" v-html="key.callBack(record, index)"/>
+                    <span v-else-if="typeof key === 'object' && key.callback" v-html="key.callback(record, index)"/>
+                    <component
+                        v-else-if="typeof key === 'object' && key.component"
+                        :is="key.component"
+                        :item="record"
+                        v-bind="cleanColumn(key)"
+                    />
+                    <span v-else-if="typeof key === 'object'" v-html="getData(record, key.key ?? key.field)"/>
+                    <span v-else-if="typeof key === 'function'" v-html="key(record, index)"/>
+                    <span v-else v-html="getData(record, key[0])"/>
+                  </slot>
                 </span>
               </template>
 
