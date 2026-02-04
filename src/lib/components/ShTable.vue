@@ -10,7 +10,7 @@ import ShRange from './ShRange.vue'
 import pagination from './list_templates/Pagination.vue'
 import { DateTime } from 'luxon'
 
-import ShApis from '../repo/helpers/ShApis'
+import apis from '../repo/helpers/ShApis'
 import helpers from '../repo/helpers/ShRepo.js'
 import shRepo from '../repo/helpers/ShRepo.js'
 import shStorage from '../repo/repositories/ShStorage'
