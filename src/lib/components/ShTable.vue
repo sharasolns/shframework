@@ -638,7 +638,7 @@ const stateProxy = reactive({
     <table
       class="table sh-table"
       :class="tableHover ? 'table-hover' : ''"
-      v-else-if="windowWidth > 700 || disableMobileResponsive"
+      v-else-if="(windowWidth > 700 || disableMobileResponsive) && records.length > 0"
     >
       <thead class="sh-thead">
         <tr>
@@ -818,24 +818,8 @@ const stateProxy = reactive({
       </tbody>
     </table>
 
-    <div v-else>
-      <div class="text-center" v-if="loading === 'loading'">
-        <div class="text-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
-
-      <div v-else-if="loading === 'error'">
-        <span>{{ loading_error }}</span>
-      </div>
-
-      <div class="mobile-list-items" v-else-if="loading === 'done'">
-        <template v-if="!records || records.length === 0">
-          <slot name="empty" v-if="hasEmptySlot"></slot>
-        </template>
-        <template v-for="(record, index) in records" :key="record.id" v-else>
+    <div class="mobile-list-items" v-else-if="loading === 'done' && records.length > 0">
+        <template v-for="(record, index) in records" :key="record.id">
           <div
             class="single-mobile-req bg-light p-3"
             @click="rowSelected(record)"
@@ -946,6 +930,29 @@ const stateProxy = reactive({
             </div>
           </div>
         </template>
+    </div>
+
+    <div v-else>
+      <div class="text-center" v-if="loading === 'loading'">
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <div v-else-if="loading === 'error'">
+        <span>{{ loading_error }}</span>
+      </div>
+
+      <div v-else-if="loading === 'done' && records.length === 0">
+        <slot name="empty" v-if="hasEmptySlot"></slot>
+        <div
+          v-else
+          class="text-center bg-primary-light px-2 py-1 rounded no_records_div"
+        >
+          <i class="bi-info-circle"></i> No records found
+        </div>
       </div>
     </div>
 
