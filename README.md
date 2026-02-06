@@ -22,6 +22,9 @@ A robust table component that handles server-side pagination, searching, and cus
 - **Auto-Label Generation**: Automatically generates human-readable labels from keys if not explicitly provided (e.g., `user.first_name` becomes "First Name").
 - **Named Slots for Custom Formatting**: Use named slots for columns to provide custom formatting (e.g., `<template #age="{ row }">`).
 - **Multi-Action Support**: Enable row selection and collective operations with a floating action bar.
+- **Caching & Background Loading**: Uses IndexedDB to cache data. Shows cached data immediately while fetching fresh data in the background (enabled via `enableTableCache` config or `:cache="true"` prop).
+- **Row Links**: Easily define clickable rows with dynamic placeholders (e.g., `:row-link="'/users/{id}'"`).
+- **Search Optimization**: Automatically clears stale data and shows a spinner when searching to ensure fresh results.
 - **Links & Actions**: Easily define column links and action buttons.
 
 ```html

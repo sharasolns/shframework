@@ -57,7 +57,9 @@ const props = defineProps({
   selectedRange: [Object, null],
   noRecordsMessage: [String, null],
   multiActions: { type: Array, default: () => [] },
+  // Caching configuration: true to enable, false to disable. If null, respects global configure 'enableTableCache'
   cache: { type: Boolean, default: null },
+  // Dynamic link for the entire row. Supports placeholders like '/user/{id}'
   rowLink: [String, null],
 });
 
@@ -381,11 +383,13 @@ const exportData = () => {
     });
 };
 
+// Attempts to load data from IndexedDB before API call
 const setCachedData = async () => {
   if (shouldCache.value) {
     const cached = await shIndexedDB.getItem(computedCacheKey.value, null);
     if (cached) {
       records.value = cached;
+      // Set to 'done' immediately to show cached data without initial spinner
       loading.value = "done";
     }
   }
@@ -393,11 +397,13 @@ const setCachedData = async () => {
 
 const reloadNotifications = () => reloadData();
 
+// Determines if caching should be active based on component props or global configuration
 const shouldCache = computed(() => {
   if (props.cache !== null) return props.cache;
   return shRepo.getShConfig("enableTableCache", false);
 });
 
+// Generates a unique, slug-safe key for IndexedDB storage
 const computedCacheKey = computed(() => {
   if (props.cacheKey) return "sh_table_cache_" + props.cacheKey;
   const keyBase = props.endPoint || props.query || "default";
@@ -406,13 +412,16 @@ const computedCacheKey = computed(() => {
 });
 
 // Main loader
+// Main data fetcher. Handles background updates when cache is present
 const reloadData = (newPage, append) => {
   if (typeof newPage !== "undefined") page.value = newPage;
 
+  // If we have cached data and not searching, we don't show the initial loading spinner
   if (shouldCache.value && records.value && records.value.length > 0 && !filter_value.value) {
     loading.value = "done";
   } else if (!append) {
     loading.value = "loading";
+    // Clear records when searching to ensure we show fresh results
     if (filter_value.value) {
       records.value = [];
     }
