@@ -15,7 +15,7 @@ ShAutoForm is a powerful auto-generating form component that automatically rende
 </template>
 
 <script setup>
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
 </script>
 ```
 
@@ -24,114 +24,128 @@ import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
 ### Required Props
 
 #### fields
+
 - **Type:** `Array`
 - **Required:** `true`
 - **Description:** Array of field names (strings) or field configuration objects
 
 **Example:**
+
 ```javascript
 // Simple array of field names
-const fields = ['name', 'email', 'phone']
+const fields = ["name", "email", "phone"];
 
 // Array of field objects with configuration
 const fields = [
   {
-    field: 'name',
-    label: 'Full Name',
-    placeholder: 'Enter your name',
-    required: true
+    field: "name",
+    label: "Full Name",
+    placeholder: "Enter your name",
+    required: true,
   },
   {
-    field: 'email',
-    type: 'email',
-    label: 'Email Address'
-  }
-]
+    field: "email",
+    type: "email",
+    label: "Email Address",
+  },
+];
 ```
 
 ### Optional Props
 
 #### action
+
 - **Type:** `String`
 - **Required:** `false`
 - **Description:** The API endpoint URL for form submission (not needed if using `gqlMutation`)
 
 #### method
+
 - **Type:** `String`
 - **Default:** `'post'`
 - **Validator:** Must be one of `['post', 'put', 'delete']`
 - **Description:** HTTP method for the API request
 
 #### actionLabel
+
 - **Type:** `String`
 - **Default:** `'Submit'`
 - **Description:** Label text for the submit button
 
 #### successMessage
+
 - **Type:** `String`
 - **Required:** `false`
 - **Description:** Toast message to display on successful submission
 
 #### successCallback
+
 - **Type:** `Function`
 - **Required:** `false`
 - **Description:** Callback function executed after successful submission
 - **Parameters:** `(responseData) => void`
 
 #### preSubmitCallback
+
 - **Type:** `Function`
 - **Required:** `false`
 - **Description:** Async callback executed before form submission. Return `true` to proceed or `false` to cancel
 - **Parameters:** `(formData) => Promise<boolean>`
 
 #### currentData
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Initial data to populate the form fields (useful for edit forms)
 
 #### retainDataAfterSubmission
+
 - **Type:** `Boolean`
 - **Default:** `false`
 - **Description:** Keep form data after successful submission instead of clearing
 
 #### retainModal
+
 - **Type:** `Boolean`
 - **Default:** `false`
 - **Description:** Keep modal open after successful submission
 
 #### steps
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Configuration for multi-step forms. When provided, the form will be broken into steps with visual progress indicators
 
 **Example:**
+
 ```javascript
 const steps = [
   {
-    name: 'personal',
-    title: 'Personal Information',
-    label: 'Step 1: Personal Info',  // Alternative to title
-    description: 'Tell us about yourself',  // Optional step description
-    fields: ['name', 'email', 'phone'],
+    name: "personal",
+    title: "Personal Information",
+    label: "Step 1: Personal Info", // Alternative to title
+    description: "Tell us about yourself", // Optional step description
+    fields: ["name", "email", "phone"],
     labels: {
-      next: 'Continue to Security',
-      previous: 'Back'
-    }
+      next: "Continue to Security",
+      previous: "Back",
+    },
   },
   {
-    name: 'account',
-    title: 'Account Details',
-    description: 'Create your account',
-    fields: ['password', 'password_confirmation'],
+    name: "account",
+    title: "Account Details",
+    description: "Create your account",
+    fields: ["password", "password_confirmation"],
     labels: {
-      next: 'Next Step',
-      previous: 'Previous Step'
-    }
-  }
-]
+      next: "Next Step",
+      previous: "Previous Step",
+    },
+  },
+];
 ```
 
 **Step Properties:**
+
 - `name` (string): Unique identifier for the step
 - `title` or `label` (string): Display text for the step indicator
 - `description` (string, optional): Additional description shown under the title
@@ -141,201 +155,231 @@ const steps = [
   - `previous`: Label for the "Previous" button (default: "Previous")
 
 ## Events
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Custom labels for fields (key: field name, value: label text)
 
 **Example:**
+
 ```javascript
 const labels = {
-  email: 'Email Address',
-  phone: 'Phone Number'
-}
+  email: "Email Address",
+  phone: "Phone Number",
+};
 ```
 
 #### placeHolders
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Custom placeholders for fields
 
 **Example:**
+
 ```javascript
 const placeHolders = {
-  email: 'you@example.com',
-  phone: '+1234567890'
-}
+  email: "you@example.com",
+  phone: "+1234567890",
+};
 ```
 
 #### helperTexts
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Helper text displayed below fields
 
 **Example:**
+
 ```javascript
 const helperTexts = {
-  email: 'We will never share your email',
-  password: 'Must be at least 8 characters'
-}
+  email: "We will never share your email",
+  password: "Must be at least 8 characters",
+};
 ```
 
 #### customComponents
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Custom Vue components for specific fields
 
 **Example:**
+
 ```javascript
-import CustomDatePicker from './CustomDatePicker.vue'
+import CustomDatePicker from "./CustomDatePicker.vue";
 
 const customComponents = {
-  birthdate: CustomDatePicker
-}
+  birthdate: CustomDatePicker,
+};
 ```
 
 #### formClasses
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Custom CSS classes for form elements
 
 **Example:**
+
 ```javascript
 const formClasses = {
-  formGroup: 'mb-3',
-  formControl: 'form-control custom-input',
-  actionBtn: 'btn btn-primary w-100'
-}
+  formGroup: "mb-3",
+  formControl: "form-control custom-input",
+  actionBtn: "btn btn-primary w-100",
+};
 ```
 
 #### formClass
+
 - **Type:** `String`
 - **Required:** `false`
 - **Description:** CSS class for the form element
 
 #### required
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Array of field names that should be marked as required
 
 **Example:**
+
 ```javascript
-const required = ['name', 'email', 'password']
+const required = ["name", "email", "password"];
 ```
 
 #### textAreas
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Fields to render as textareas
 
 #### emails
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Fields to render as email inputs
 
 #### phones
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Fields to render as phone inputs
 
 #### numbers
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Fields to render as number inputs
 
 #### dates
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Fields to render as date inputs
 
 #### selects
+
 - **Type:** `Array`
 - **Required:** `false`
 - **Description:** Fields to render as select dropdowns
 
 #### fillSelects
+
 - **Type:** `Object`
 - **Required:** `false`
 - **Description:** Configuration for select fields including options
 
 **Example:**
+
 ```javascript
 const fillSelects = {
   gender: {
     options: [
-      { value: 'male', label: 'Male' },
-      { value: 'female', label: 'Female' }
-    ]
+      { value: "male", label: "Male" },
+      { value: "female", label: "Female" },
+    ],
   },
   country: {
-    suggests: '/api/countries/search',
-    type: 'suggests'
-  }
-}
+    suggests: "/api/countries/search",
+    type: "suggests",
+  },
+  interests: {
+    options: [
+      { value: "sports", label: "Sports" },
+      { value: "music", label: "Music" },
+    ],
+    type: "checkbox",
+  },
+};
 ```
 
 #### gqlMutation
+
 - **Type:** `String`
 - **Required:** `false`
 - **Description:** GraphQL mutation name (use instead of `action` for GraphQL)
 
 **Example:**
+
 ```javascript
-const gqlMutation = 'createUser'
+const gqlMutation = "createUser";
 ```
 
 ## Events
 
 ### @success
+
 Emitted when form submission is successful
 
 **Payload:** `responseData`
 
 **Example:**
+
 ```vue
-<ShAutoForm
-  :fields="fields"
-  action="/api/users"
-  @success="handleSuccess"
-/>
+<ShAutoForm :fields="fields" action="/api/users" @success="handleSuccess" />
 
 <script setup>
 const handleSuccess = (data) => {
-  console.log('User created:', data)
-}
+  console.log("User created:", data);
+};
 </script>
 ```
 
 ### @preSubmit
+
 Emitted before form submission (after preSubmitCallback)
 
 **Payload:** `formData`
 
 ### @fieldChanged
+
 Emitted when any field value changes
 
 **Payload:** `(fieldName, fieldValue, allFormData)`
 
 **Example:**
+
 ```vue
-<ShAutoForm
-  :fields="fields"
-  @fieldChanged="onFieldChange"
-/>
+<ShAutoForm :fields="fields" @fieldChanged="onFieldChange" />
 
 <script setup>
 const onFieldChange = (field, value, formData) => {
-  console.log(`${field} changed to:`, value)
-  console.log('All form data:', formData)
-}
+  console.log(`${field} changed to:`, value);
+  console.log("All form data:", formData);
+};
 </script>
 ```
 
 ### @formSubmitted
+
 Emitted when form is successfully submitted (same as @success)
 
 **Payload:** `responseData`
 
 ### @formError
+
 Emitted when form submission fails
 
 **Payload:** `errorReason`
@@ -347,21 +391,21 @@ When using object-based field definitions, you can configure each field individu
 ```javascript
 const fields = [
   {
-    field: 'email',           // Field name (required)
-    name: 'email',            // Alternative to 'field'
-    type: 'email',            // Input type
-    label: 'Email Address',   // Custom label
-    placeholder: 'Enter email',
-    helper: 'Helper text',
-    helperText: 'Alt helper', // Alternative to 'helper'
-    required: true,           // Mark as required
-    component: CustomInput,   // Custom component
+    field: "email", // Field name (required)
+    name: "email", // Alternative to 'field'
+    type: "email", // Input type
+    label: "Email Address", // Custom label
+    placeholder: "Enter email",
+    helper: "Helper text",
+    helperText: "Alt helper", // Alternative to 'helper'
+    required: true, // Mark as required
+    component: CustomInput, // Custom component
     // Any other props to pass to the input component
     disabled: false,
     readonly: false,
-    class: 'custom-class'
-  }
-]
+    class: "custom-class",
+  },
+];
 ```
 
 ## Auto-detected Field Types
@@ -375,6 +419,7 @@ ShAutoForm automatically detects field types based on field names:
 - **Dates:** free_tier_days, recurring_date, date, paid_at
 - **Passwords:** password, password_confirmation, pin
 - **Selects:** gender, payment_method, allow_view_mode, reasons_name, has_free_tier, payment_period, role, register_as, account_type
+- **Checkboxes:** (No default auto-detect, use `type: 'checkbox'` or `type: 'checkboxes'`)
 
 ## Examples
 
@@ -393,11 +438,11 @@ ShAutoForm automatically detects field types based on field names:
 </template>
 
 <script setup>
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
 
 const onSuccess = (data) => {
-  console.log('Form submitted:', data)
-}
+  console.log("Form submitted:", data);
+};
 </script>
 ```
 
@@ -420,43 +465,43 @@ const onSuccess = (data) => {
 </template>
 
 <script setup>
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
-import { useRouter } from 'vue-router'
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
 const fields = [
-  'name',
-  'email',
-  'password',
-  'password_confirmation',
-  'phone',
-  'gender',
-  'age'
-]
+  "name",
+  "email",
+  "password",
+  "password_confirmation",
+  "phone",
+  "gender",
+  "age",
+];
 
 const labels = {
-  password_confirmation: 'Confirm Password'
-}
+  password_confirmation: "Confirm Password",
+};
 
 const helperTexts = {
-  password: 'Must be at least 8 characters',
-  email: 'We will never share your email'
-}
+  password: "Must be at least 8 characters",
+  email: "We will never share your email",
+};
 
 const fillSelects = {
   gender: {
     options: [
-      { value: 'male', label: 'Male' },
-      { value: 'female', label: 'Female' },
-      { value: 'other', label: 'Other' }
-    ]
-  }
-}
+      { value: "male", label: "Male" },
+      { value: "female", label: "Female" },
+      { value: "other", label: "Other" },
+    ],
+  },
+};
 
 const redirectToLogin = () => {
-  router.push('/login')
-}
+  router.push("/login");
+};
 </script>
 ```
 
@@ -476,21 +521,21 @@ const redirectToLogin = () => {
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
+import { ref, onMounted } from "vue";
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
 
-const userId = ref(1)
-const userData = ref({})
+const userId = ref(1);
+const userData = ref({});
 
 onMounted(async () => {
   // Fetch user data
-  const response = await fetch(`/api/users/${userId.value}`)
-  userData.value = await response.json()
-})
+  const response = await fetch(`/api/users/${userId.value}`);
+  userData.value = await response.json();
+});
 
 const handleUpdate = (data) => {
-  console.log('User updated:', data)
-}
+  console.log("User updated:", data);
+};
 </script>
 ```
 
@@ -508,25 +553,25 @@ const handleUpdate = (data) => {
 </template>
 
 <script setup>
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
 
 const validateForm = async (formData) => {
-  if (!formData.email.includes('@')) {
-    alert('Please enter a valid email')
-    return false
+  if (!formData.email.includes("@")) {
+    alert("Please enter a valid email");
+    return false;
   }
-  
+
   if (formData.password.length < 8) {
-    alert('Password must be at least 8 characters')
-    return false
+    alert("Password must be at least 8 characters");
+    return false;
   }
-  
-  return true
-}
+
+  return true;
+};
 
 const handleLogin = (data) => {
-  console.log('Logged in:', data)
-}
+  console.log("Logged in:", data);
+};
 </script>
 ```
 
@@ -544,11 +589,11 @@ const handleLogin = (data) => {
 </template>
 
 <script setup>
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
 
 const onUserCreated = (data) => {
-  console.log('GraphQL mutation result:', data)
-}
+  console.log("GraphQL mutation result:", data);
+};
 </script>
 ```
 
@@ -565,18 +610,18 @@ const onUserCreated = (data) => {
 </template>
 
 <script setup>
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
-import CustomDatePicker from './CustomDatePicker.vue'
-import ImageUploader from './ImageUploader.vue'
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
+import CustomDatePicker from "./CustomDatePicker.vue";
+import ImageUploader from "./ImageUploader.vue";
 
 const customComponents = {
   birthdate: CustomDatePicker,
-  avatar: ImageUploader
-}
+  avatar: ImageUploader,
+};
 
 const handleSuccess = (data) => {
-  console.log('User created with custom inputs:', data)
-}
+  console.log("User created with custom inputs:", data);
+};
 </script>
 ```
 
@@ -592,17 +637,17 @@ const handleSuccess = (data) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
+import { ref } from "vue";
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
 
-const dynamicFields = ref(['name', 'email'])
+const dynamicFields = ref(["name", "email"]);
 
 const onFieldChange = (field, value, formData) => {
   // Add phone field if email is filled
-  if (field === 'email' && value && !dynamicFields.value.includes('phone')) {
-    dynamicFields.value.push('phone')
+  if (field === "email" && value && !dynamicFields.value.includes("phone")) {
+    dynamicFields.value.push("phone");
   }
-}
+};
 </script>
 ```
 
@@ -611,7 +656,16 @@ const onFieldChange = (field, value, formData) => {
 ```vue
 <template>
   <ShAutoForm
-    :fields="['name', 'email', 'phone', 'password', 'password_confirmation', 'address', 'city', 'country']"
+    :fields="[
+      'name',
+      'email',
+      'phone',
+      'password',
+      'password_confirmation',
+      'address',
+      'city',
+      'country',
+    ]"
     :steps="steps"
     :required="['name', 'email', 'password']"
     action="/api/register"
@@ -623,47 +677,47 @@ const onFieldChange = (field, value, formData) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ShAutoForm } from '@/lib/components/ShAutoForm.vue'
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { ShAutoForm } from "@/lib/components/ShAutoForm.vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
 const steps = [
   {
-    name: 'personal',
-    title: 'Personal Information',
-    description: 'Tell us about yourself',
-    fields: ['name', 'email', 'phone'],
+    name: "personal",
+    title: "Personal Information",
+    description: "Tell us about yourself",
+    fields: ["name", "email", "phone"],
     labels: {
-      next: 'Continue to Security',
-      previous: 'Back'
-    }
+      next: "Continue to Security",
+      previous: "Back",
+    },
   },
   {
-    name: 'account',
-    title: 'Account Security',
-    description: 'Create a strong password',
-    fields: ['password', 'password_confirmation'],
+    name: "account",
+    title: "Account Security",
+    description: "Create a strong password",
+    fields: ["password", "password_confirmation"],
     labels: {
-      next: 'Continue to Address',
-      previous: 'Back to Personal Info'
-    }
+      next: "Continue to Address",
+      previous: "Back to Personal Info",
+    },
   },
   {
-    name: 'address',
-    title: 'Address Details',
-    description: 'Where are you located?',
-    fields: ['address', 'city', 'country'],
+    name: "address",
+    title: "Address Details",
+    description: "Where are you located?",
+    fields: ["address", "city", "country"],
     labels: {
-      previous: 'Back to Security'
-    }
-  }
-]
+      previous: "Back to Security",
+    },
+  },
+];
 
 const onRegistrationComplete = (data) => {
-  router.push('/dashboard')
-}
+  router.push("/dashboard");
+};
 </script>
 ```
 
@@ -672,6 +726,7 @@ const onRegistrationComplete = (data) => {
 ShAutoForm automatically handles server-side validation errors (HTTP 422 responses). Errors are displayed below the respective fields with the `is-invalid` class.
 
 **Server Response Format:**
+
 ```json
 {
   "errors": {
@@ -689,11 +744,11 @@ ShAutoForm uses injected CSS classes from the `shFormElementClasses` provider. Y
 
 ```javascript
 // In your main.js or plugin
-app.provide('shFormElementClasses', {
-  formGroup: 'form-group mb-3',
-  formControl: 'form-control',
-  actionBtn: 'btn btn-primary'
-})
+app.provide("shFormElementClasses", {
+  formGroup: "form-group mb-3",
+  formControl: "form-control",
+  actionBtn: "btn btn-primary",
+});
 ```
 
 ### Per-Form Configuration
@@ -704,7 +759,7 @@ app.provide('shFormElementClasses', {
   :formClasses="{
     formGroup: 'my-form-group',
     formControl: 'my-input',
-    actionBtn: 'my-submit-btn'
+    actionBtn: 'my-submit-btn',
   }"
 />
 ```
@@ -715,10 +770,10 @@ You can provide custom form input components globally:
 
 ```javascript
 // In your main.js or plugin
-import CustomTextInput from './CustomTextInput.vue'
-import CustomEmailInput from './CustomEmailInput.vue'
+import CustomTextInput from "./CustomTextInput.vue";
+import CustomEmailInput from "./CustomEmailInput.vue";
 
-app.provide('formComponents', {
+app.provide("formComponents", {
   text: CustomTextInput,
   email: CustomEmailInput,
   textArea: CustomTextAreaInput,
@@ -726,8 +781,8 @@ app.provide('formComponents', {
   number: CustomNumberInput,
   select: CustomSelectInput,
   password: CustomPasswordInput,
-  date: CustomDateInput
-})
+  date: CustomDateInput,
+});
 ```
 
 ## Best Practices
@@ -761,6 +816,7 @@ The redesigned multi-step form includes:
 ### Step Configuration
 
 Each step should have:
+
 - `name`: Unique identifier for the step
 - `title` or `label`: Display text for the step indicator
 - `description` (optional): Additional context shown under the title
@@ -788,12 +844,12 @@ You can customize step styling through the `formClasses` prop:
 
 ```javascript
 const formClasses = {
-  formStep: 'custom-step-class',  // Class for each step indicator
+  formStep: "custom-step-class", // Class for each step indicator
   // The component automatically adds these classes:
   // - 'active' for current step
   // - 'completed' for finished steps
   // - 'upcoming' for future steps
-}
+};
 ```
 
 ### Dark Mode Support
@@ -814,4 +870,3 @@ The multi-step form automatically adapts to dark mode with appropriate color adj
 - [ShForm](./shform.md) - Manual form builder with more control
 - [ShModalForm](./shmodalform.md) - Auto form in a modal
 - [Form Components](../helpers/form-components.md) - Individual form input components
-

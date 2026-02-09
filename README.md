@@ -23,8 +23,8 @@ A robust table component that handles server-side pagination, searching, and cus
 - **Named Slots for Custom Formatting**: Use named slots for columns to provide custom formatting (e.g., `<template #age="{ row }">`).
 - **Multi-Action Support**: Enable row selection and collective operations with a floating action bar.
 - **Caching & Background Loading**: Uses IndexedDB to cache data. Shows cached data immediately while fetching fresh data in the background (enabled via `enableTableCache` config or `:cache="true"` prop).
-- **Row Links**: Easily define clickable rows with dynamic placeholders (e.g., `:row-link="'/users/{id}'"`).
-- **Search Optimization**: Automatically clears stale data and shows a spinner when searching to ensure fresh results.
+- **User-Specific Caching**: Automatically prefixes cache keys with user identifiers (e.g., `id`, `email`) to ensure data isolation between users. Configure via `cacheUserFields`.
+- **Metadata Tracking**: Tracks cache source URLs and timestamps in a dedicated `cache_metadata` store for better auditability.
 - **Links & Actions**: Easily define column links and action buttons.
 
 ```html
@@ -67,6 +67,8 @@ The flagship component for generating complex forms from simple configurations.
 - **Multi-Step Support**: Break long forms into logical steps with progress indicators.
 - **Validation**: Seamlessly handles and displays Laravel validation errors (422).
 - **GraphQL Support**: Integrate with GraphQL mutations via the `gqlMutation` prop.
+- **Checkbox Support**: Easily handle boolean or multiple-choice fields with `type: 'checkbox'`.
+- **Modern Reactivity**: Built using Vue 3.4's `defineModel` for clean, conflict-free two-way binding.
 
 ```html
 <sh-auto-form
@@ -114,6 +116,7 @@ A collection of common UI and data utilities.
 - `shRepo.runPlainRequest(url, message)`: Post request with a confirmation prompt.
 - `shRepo.runSilentRequest(url)`: Direct post request without prompt.
 - `shRepo.showToast(message, type)`: Displays a sweetalert2 toast.
+- `shRepo.flushCache()`: Clears all IndexedDB cache data.
 - `shRepo.swalSuccess(message)` / `shRepo.swalError(message)`: Standard success/error popups.
 
 ### shUser (State Management)
