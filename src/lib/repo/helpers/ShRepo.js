@@ -1,4 +1,5 @@
 import ShStorage from '../repositories/ShStorage.js'
+import shIndexedDB from '../repositories/ShIndexedDB.js'
 import Swal from 'sweetalert2'
 import apis from './ShApis.js'
 import { DateTime } from 'luxon'
@@ -304,6 +305,10 @@ const hideOffCanvas = offCanvasId => {
     }
 }
 
+const flushCache = () => {
+    return shIndexedDB.clear()
+}
+
 export default {
     swalSuccess,
     swalError,
@@ -323,5 +328,6 @@ export default {
     showModal,
     hideModal,
     showOffCanvas,
-    hideOffCanvas
+    hideOffCanvas,
+    flushCache
 }

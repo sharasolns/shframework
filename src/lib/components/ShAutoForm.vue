@@ -12,6 +12,7 @@ import SelectInput from './form-components/SelectInput.vue'
 import PasswordInput from './form-components/PasswordInput.vue'
 import ShSuggest from './form-components/ShSuggest.vue'
 import DateInput from './form-components/DateInput.vue'
+import CheckboxInput from './form-components/CheckboxInput.vue'
 const props = defineProps({
   action: {
     type: String,
@@ -176,13 +177,17 @@ const getFieldComponent = (fieldObj) => {
     number: formComponents.number ?? NumberInput,
     select: formComponents.select ?? SelectInput,
     password: formComponents.password ?? PasswordInput,
-    date: formComponents.date ?? DateInput
+    date: formComponents.date ?? DateInput,
+    checkbox: formComponents.checkbox ?? CheckboxInput
   }
 
   // Return component based on explicit type
   if (fieldObj.type) {
     if (fieldObj.type === 'suggest' || fieldObj.type === 'suggests') {
       return ShSuggest
+    }
+    if (fieldObj.type === 'checkbox' || fieldObj.type === 'checkboxes') {
+      return CheckboxInput
     }
     return componentMap[fieldObj.type] ?? componentMap.text
   }

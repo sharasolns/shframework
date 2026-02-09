@@ -33,6 +33,16 @@ function logoutUser() {
   shRepo.showToast('logout successful')
   router.push('/auth/login')
 }
+function flushCache() {
+  shRepo.confirmAction('Flush Cache', 'Are you sure you want to clear all cached data?').then(res => {
+    if(res.isConfirmed){
+      shRepo.flushCache().then(() => {
+        shRepo.showToast('Cache cleared successfully')
+        window.location.reload()
+      })
+    }
+  })
+}
 const unreadCount = ref('-')
 const getUnreadCount = () => {
   shApis.doGet('messages/count-unread').then(res => {
@@ -172,9 +182,14 @@ onMounted(() => {
               <hr class="dropdown-divider">
             </li>
             <li>
+              <a @click="flushCache" class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-trash"></i>
+                <span>Flush Cache</span>
+              </a>
+            </li>
+            <li>
               <hr class="dropdown-divider">
             </li>
-
             <li>
               <a @click="logoutUser" class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-box-arrow-right"></i>

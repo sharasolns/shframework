@@ -1,19 +1,15 @@
 <script setup>
 import { computed } from 'vue'
 
-const props = defineProps(['modelValue','label'])
-const emit = defineEmits(['update:modelValue','clearValidationErrors'])
+const model = defineModel()
+const props = defineProps(['label'])
+const emit = defineEmits(['clearValidationErrors'])
 
-// Use computed for proper two-way binding
-const inputModel = computed({
-  get: () => props.modelValue,
-  set: (value) => {
-    emit('clearValidationErrors')
-    emit('update:modelValue', value)
-  }
-})
+const onInput = () => {
+  emit('clearValidationErrors')
+}
 </script>
 
 <template>
-  <input type="email" v-model="inputModel">
+  <input type="email" v-model="model" @input="onInput">
 </template>

@@ -45,6 +45,7 @@ const ShFrontend = {
     const registrationFields = options.registrationFields ?? ['name','email','phone','password','password_confirmation']
     const AuthComponent = options.authComponent ?? ShAuth
     const userEndpoint = options.userEndpoint ?? 'auth/user'
+    const cacheUserFields = options.cacheUserFields ?? ['id']
     const baseApiUrl = options.baseApiUrl ?? import.meta.env.VITE_APP_API_URL
     app.provide('loginEndpoint',loginEndpoint)
     app.provide('registerEndpoint', registerEndpoint)
@@ -61,6 +62,7 @@ const ShFrontend = {
     app.provide('noRecordsComponent',noRecordsComponent)
     app.provide('forgotEndpoint',forgotEndpoint)
     app.provide('userEndpoint',userEndpoint)
+    app.provide('cacheUserFields', cacheUserFields)
     window.swalPosition = swalPosition
     initApi(baseApiUrl)
     if(options.router) {
@@ -87,7 +89,7 @@ const ShFrontend = {
     }
     //filter unwanted config items from options to be put in local storage
     const removeKeys = ['formTextInput','router','shFormElementClasses']
-    const allowKeys = ['enableTableCache']
+    const allowKeys = ['enableTableCache', 'cacheUserFields']
     Object.keys(options).map(key=> ((!['string','integer','number','boolean'].includes(typeof options[key]) && !allowKeys.includes(key)) || removeKeys.includes(key)) && delete options[key])
 
     ShStorage.setItem('ShConfig',options)

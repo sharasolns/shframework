@@ -470,7 +470,7 @@ const reloadData = (newPage, append) => {
       emit("dataLoaded", response);
 
       if (page.value < 2 && shouldCache.value) {
-        shIndexedDB.setItem(computedCacheKey.value, response.data);
+        shIndexedDB.setItem(computedCacheKey.value, response.data, { url: endPoint });
       }
 
       pagination_data.value = {

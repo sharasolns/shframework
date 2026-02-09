@@ -2,17 +2,13 @@
 import { computed, onMounted, ref } from 'vue'
 import shApis from '../../repo/helpers/ShApis.js'
 
-const props = defineProps(['modelValue','label','url','required','options','dataUrl','data'])
-const emit = defineEmits(['update:modelValue','clearValidationErrors'])
+const model = defineModel()
+const props = defineProps(['label','url','required','options','dataUrl','data'])
+const emit = defineEmits(['clearValidationErrors'])
 
-// Use computed for proper two-way binding
-const inputModel = computed({
-  get: () => props.modelValue,
-  set: (value) => {
-    emit('clearValidationErrors')
-    emit('update:modelValue', value)
-  }
-})
+const onInput = () => {
+  emit('clearValidationErrors')
+}
 
 const selectOptions = ref(null)
 
