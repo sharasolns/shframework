@@ -119,7 +119,7 @@ const props = defineProps({
     type: Array,
     required: false
   },
-  hideButton: {
+  hideSubmitButton: {
     type: Boolean,
     default: false
   }
@@ -588,7 +588,7 @@ onMounted(() => {
           <span class="sh-btn-icon">→</span>
         </button>
       </div>
-      <div v-if="isLastStep && !hideButton" :class="getElementClass('formGroup') + ' ms-auto'">
+      <div v-if="isLastStep && !hideSubmitButton" :class="getElementClass('formGroup') + ' ms-auto'">
         <button
           :style="{width: submitBtnWidth}"
           ref="submitBtn"

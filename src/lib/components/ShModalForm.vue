@@ -54,6 +54,7 @@ const cleanedProp = computed(()=>{
   const p = {...props}
   delete p.class
   delete p.modalId
+  delete p.hideButton
   return p
 })
 </script>

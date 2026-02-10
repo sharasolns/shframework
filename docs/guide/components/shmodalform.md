@@ -137,3 +137,19 @@ const fields = [
 ```
     Example: success-message="Task added successfully"
 ```
+
+### `hide-button`
+
+- Type: `boolean`
+- Default: `false`
+- Required: `false`
+- Details:
+  If `true`, the modal trigger button/link will be hidden. This is useful when you want to trigger the modal programmatically (e.g., via `shRepo.showModal(id)`).
+
+### `hide-submit-button`
+
+- Type: `boolean`
+- Default: `false`
+- Required: `false`
+- Details:
+  If `true`, the submit button inside the form will be hidden. Useful when you want to trigger form submission externally.

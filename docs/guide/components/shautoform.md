@@ -118,6 +118,12 @@ const fields = ["name", "email", "phone"];
 - **Required:** `false`
 - **Description:** Initial data to populate the form fields (useful for edit forms)
 
+#### hideSubmitButton
+
+- **Type:** `Boolean`
+- **Default:** `false`
+- **Description:** Hide the form's submit button. Useful when you want to trigger form submission externally via a ref or custom UI.
+
 #### retainDataAfterSubmission
 
 - **Type:** `Boolean`
