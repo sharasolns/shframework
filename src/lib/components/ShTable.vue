@@ -606,7 +606,7 @@ const stateProxy = reactive({
       </button>
     </div>
 
-    <div class="row" v-if="!hideSearch && (records.length > 0 || !hasEmptySlot || filter_value.length > 0)">
+    <div class="row" v-if="!hideSearch && (pagination_data?.end > 1 || filter_value.length > 0)">
       <div
         class="col-12 mb-3 d-flex justify-content-between flex-column flex-md-row flex-lg-row"
       >
@@ -1009,7 +1009,7 @@ const stateProxy = reactive({
     </div>
 
     <pagination
-      v-if="pagination_data && (records.length > 0 || !hasEmptySlot || filter_value.length > 0)"
+      v-if="pagination_data && (records.length > 0 || filter_value.length > 0)"
       @loadMoreRecords="loadMoreRecords"
       :hide-load-more="hideLoadMore"
       :per-page="per_page"

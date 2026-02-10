@@ -1,13 +1,15 @@
 <template>
   <div v-if="paginationStyle !== 'loadMore'">
     <div class="record_count_body mb-3">
-      <span class="per_page_show">Showing</span>&nbsp;
-      <select class="select_per_page" v-on:change="changePerPage" v-model="per_page">
-        <option v-for="option in pageOptions" :value="option">{{  option }}</option>
-      </select>
-      <span class="record_counts"> of {{ pagination_data.record_count }} items</span>
+      <template v-if="pagination_data.end > 1">
+        <span class="per_page_show">Showing</span>&nbsp;
+        <select class="select_per_page" v-on:change="changePerPage" v-model="per_page">
+          <option v-for="option in pageOptions" :value="option">{{  option }}</option>
+        </select>
+      </template>
+      <span class="record_counts"> Showing {{ pagination_data.record_count }} items</span>
     </div>
-    <nav aria-label="Page navigation" v-if="pagination_data != null">
+    <nav aria-label="Page navigation" v-if="pagination_data != null && pagination_data.end > 1">
       <ul class="pagination">
         <li :class="getActivePage === 1 ? 'disabled' : '' " class="page-item"><a @click="changeTableKey('page',getActivePage - 1)" class="page-link">«</a></li>
         <li class="page-item" v-for="page in getPages" :key="page" v-bind:class="getActivePage === page ? 'active':''">
