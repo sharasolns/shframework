@@ -139,13 +139,6 @@ const getTabKey = (tab)=>{
   return tab.name || tab.key
 }
 
-const getTabPermission = tab=>{
-  if (typeof tab === 'string') {
-    return ''
-  }
-  return tab.permission
-}
-
 const getTabLabel = tab=>{
   let label = ''
   if (typeof tab === 'string') {
@@ -159,7 +152,7 @@ const getTabLabel = tab=>{
 <template>
   <template v-if="allowedTabs.length > 0">
     <ul class="nav nav-tabs sh-tabs" :class="classes ?? shRepo.getShConfig('tabsClass','sh-tabs nav-tabs-bordered')">
-      <li class="nav-item" v-for="tab in allowedTabs" :key="getTabKey(tab)" v-if-user-can="getTabPermission(tab)">
+      <li class="nav-item" v-for="tab in allowedTabs" :key="getTabKey(tab)">
         <router-link @click="setTab(tab)" :active-class="'active'" class="nav-link text-capitalize"
                      :to="baseUrl+'/tab/'+getTabKey(tab)" role="tab" :class="'sh_tab_' + getTabKey(tab)">
           {{ getTabLabel(tab) }}
